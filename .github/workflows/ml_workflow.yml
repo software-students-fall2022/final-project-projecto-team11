@@ -1,0 +1,51 @@
+name: Machine Learning Workflow
+run-name: ${{ github.actor }}'s Machine Learning Workflow
+on: 
+  push:
+    branches:
+      - 'main'
+      - 'master'
+
+jobs:
+  machine_learning_test:
+    name: ML Run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: setting up 3.9, 3.8, 3.10 pythons
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: updating pip, requirements, pytest
+        run: | 
+            python -m pip install --upgrade pip
+            pip install pytest
+            sudo apt-get install portaudio19-dev
+            sudo apt-get install ffmpeg
+            if [ -f ./machine-learning-client/requirements.txt ]; then pip install -r ./machine-learning-client/requirements.txt; fi 
+      - name: Run Unit Tests & Coverage Analysis
+        run: |
+            cd ./machine-learning-client
+            coverage run --omit ./tests/test.py,./translator/__init__.py -m pytest ./tests/test.py > machine_test_results.txt
+            python -m coverage report > machine_coverage_results.txt
+            
+      - name: Upload Coverage Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ml_coverage_results
+          path: ./machine-learning-client/machine_coverage_results.txt
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ml_test_results
+          path: ./machine-learning-client/machine_test_results.txt
+      
+  machine_learning_deployment:
+    needs: machine_learning_test

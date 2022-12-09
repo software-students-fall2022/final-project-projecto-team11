@@ -1,0 +1,57 @@
+name: Web App Workflow
+run-name: ${{ github.actor }}'s Web App Workflow
+on: 
+  push:
+   branches: 
+    - 'main'
+    - 'master'
+
+jobs:
+  coverage_and_pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: setting up recent python versions (3.8, 3.9, 3.10)
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: updating pip, requirements, pytest
+        run: | 
+            python3 -m pip install --upgrade pip
+            pip install pytest
+            if [ -f ./web-app/requirements.txt ]; then pip install -r ./web-app/requirements.txt; fi 
+            
+      #Running commands
+      #cd .\web-app
+      #.\venv\bin\activate # activate the environment assuming it exists
+      #coverage run -m .\tests\*.py
+      #coverage report
+        
+      - name: Run Unit Tests & Coverage Analysis
+        run: |
+            cd ./web-app
+            coverage run --omit ./tests/test.py -m pytest ./tests/test.py > app_test_results.txt
+            python3 -m coverage report > app_coverage_results.txt          
+      #if was useful/required, could separate each upload from each python version to different artifact
+
+      - name: Upload Coverage Results
+        uses: actions/upload-artifact@v3
+        with: 
+          name: app_coverage_results
+          path: ./web-app/app_coverage_results.txt
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: app_test_results
+          path: ./web-app/app_test_results.txt
+
+  delivery_deployment: 
+    needs: coverage_and_pytest
+    
