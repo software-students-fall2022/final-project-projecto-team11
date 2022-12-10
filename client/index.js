@@ -6,7 +6,14 @@ const handleRecordStop = (event, recordedChunks) => {
     downloadLink.download = 'test.wav'
     document.body.appendChild(downloadLink)
 
-    // TODO: send fetch from in here
+    // TODO: handle fetch response and manage the domain
+    fetch('http://localhost:5000', {
+        method: 'POST',
+        body: new Blob(recordedChunks),
+        headers: {
+            'Content-Type': 'audio/mpeg'
+        }
+    })
 }
 
 const handleRecordStart = (event, stream) => {
