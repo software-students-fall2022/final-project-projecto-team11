@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Translator</title>
+</head>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
+
+<body>
+<header>
+    <!--Nav-->
+    <nav>
+        <div class="navbar">
+            <div class="nav-left">
+                <h2 class="logo">
+                    <a class="link-no-style white" href="#">
+                        Web Translator
+                    </a>
+                </h2>
+                <h4 class="navlink">
+                    <a class="link-no-style white bold" href="{{ url_for('main.home') }}">
+                        Home
+                    </a>
+                </h4>
+                <h4 class="navlink">
+                    <a class="link-no-style white bold" href="{{ url_for('main.history') }}">
+                        History
+                    </a>
+                </h4>
+            </div>
+            <h5>
+                <a class="link-no-style white bold" href="{{ url_for('auth.logout') }}">
+                    Logout
+                </a>
+            </h5>
+        </div>
+    </nav>
+</header>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+</html>
