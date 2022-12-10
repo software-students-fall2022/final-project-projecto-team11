@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form class="center" method="POST" action="/register">
+    <h3>Register</h3>
+
+    <div class="field mt-1">
+        <div class="control">
+            <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
+        </div>
+    </div>
+
+    <div class="field mt-1">
+        <div class="control">
+            <input class="input is-large" type="password" name="password" placeholder="Your Password">
+        </div>
+    </div>
+
+    <div class="field mt-1">
+        <div class="control">
+            <input class="input is-large" type="text" name="confirm" placeholder="Confirm Password">
+        </div>
+    </div>
+    <div class="mt-1">
+        <small>Already a user? Back to <a href="{{ url_for('auth.login') }}">login</a>.</small>
+    </div>
+    <button class="button mt-1 button-wide">Register</button>
+</form>
+{% endblock %}
