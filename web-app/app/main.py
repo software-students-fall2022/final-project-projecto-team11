@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, request
+import base64
 from . import db
 
 # ROUTING FOR MAIN/NON-AUTH PAGES
