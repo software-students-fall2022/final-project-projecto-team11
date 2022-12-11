@@ -1,0 +1,16 @@
+{
+    "_id": "634f028fa11c10159ae12607",
+    "user": "634f028fa11c10159ae12607", // will be null if no user associated
+    // "translation" object will be null if job status is not SUCCESS
+    "translation": {
+        "inputLanguage": "de",
+        "inputText": "Guten tag.",
+        "outputText": "Good morning.",
+        "outputLanguage": "en"
+    },
+    "status": {
+        "message": "IN_QUEUE", // possible values: IN_QUEUE (100), PROCESSING (100), SUCCESS (200), FAILURE (500)
+        "update": 1666122383 // timestamp for last update to status
+    },
+    "body": {} // will be binary file in DB but never returned in query
+}
