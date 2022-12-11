@@ -19,9 +19,7 @@ def work(tid, job_queue, delay):
     model_tr = M2M100ForConditionalGeneration.from_pretrained(ckpt)
     toks = {lang: M2M100Tokenizer.from_pretrained(ckpt, src_lang="en", tr_lang=lang) for lang in supported_languages}
     # Check if CUDA is available for faster processing, if so enable CUDA.
-    device = None
-    if torch.cuda.is_available():
-        device = 'cuda'
+    device = 'cuda' if torch.cuda.is_available() else None
     whisper_model = whisper.load_model(name='base', device=device)
     print(f"THREAD {tid}: Finished loading ML models.")
 
