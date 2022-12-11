@@ -12,7 +12,7 @@ def create_app(test_config=None):
     CORS(app)
 
     # Default number of whisper threads to start up.
-    # NOTE: I only had enough RAM for 2 threads at once, and my CPU was pinned when 
+    # NOTE: I only had enough RAM for 2 threads at once, and my CPU was pinned when both threads were running jobs.
     NUM_THREADS = 2
 
     # Get MongoDB connection string.
@@ -23,7 +23,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
     
     # Connect to the database and start whisper threads.
-    translator.jobhandler.start_threads(app.config['NUM_THREADS'], translator.util.get_db())
+    translator.jobhandler.start_threads(app.config['NUM_THREADS'], translator.util.get_db(), slowstart=True)
 
     # Set up endpoints.
     app.add_url_rule('/translation', methods=["POST"], view_func=translator.endpoints.add_job)

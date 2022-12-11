@@ -4,7 +4,7 @@ import time
 
 job_queue = multiprocessing.Queue()
 
-def start_threads(num_threads, db):
+def start_threads(num_threads, db, slowstart=False):
     # Check the database to see if any items were processing on last shutdown.
     translations_processing = db.find({'status.message': "PROCESSING"}, {'_id': 1})
     for translation in translations_processing:
@@ -19,7 +19,9 @@ def start_threads(num_threads, db):
         print(f"Restored job {id} to queue! (Was IN_QUEUE)")
         job_queue.put(id)
 
+    # Compute a delay amount between threads starting to ensure even spacing.
+    delay = 30 if slowstart else 1.0/float(num_threads)
+
     # Create and start the number of threads requested.
     for i in range(num_threads):
-        multiprocessing.Process(target=work, args=(i, job_queue)).start()
-        time.sleep(1.0/float(num_threads))
+        multiprocessing.Process(target=work, args=(i, job_queue, i*delay)).start()

@@ -8,7 +8,10 @@ import warnings
 import torch
 import traceback
 
-def work(tid, job_queue):
+def work(tid, job_queue, delay):
+    # Wait for a delay to allow for even spacing between threads.
+    time.sleep(delay)
+
     # Load ML models.
     warnings.filterwarnings("ignore", category=UserWarning) # Block out warnings about machine preferences.
     print(f"THREAD {tid}: Started loading ML models.")
