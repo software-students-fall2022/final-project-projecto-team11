@@ -11,9 +11,9 @@ const pollForTranslation = async (translationId) => {
 
             const translationInfo = await response.json()
             console.log(translationInfo)
-            const { jobStatus, translation } = translationInfo
+            const { status, translation } = translationInfo
 
-            if (jobStatus !== 'pending') {
+            if (status.message !== 'IN_QUEUE' && status.message !== 'PROCESSING') {
                 return translation
             }
         } catch (err) {
@@ -30,11 +30,11 @@ const handleRecordStop = async (event, recordedChunks) => {
     const outputLanguage = document.querySelector('#input-output-language').value
 
     // this is just for testing purposes to see if the audio recorded
-    const downloadLink = document.createElement('a')
-    downloadLink.textContent = 'Download Audio'
-    downloadLink.href = URL.createObjectURL(recordingBlob)
-    downloadLink.download = 'test.wav'
-    document.body.appendChild(downloadLink)
+    // const downloadLink = document.createElement('a')
+    // downloadLink.textContent = 'Download Audio'
+    // downloadLink.href = URL.createObjectURL(recordingBlob)
+    // downloadLink.download = 'test.wav'
+    // document.body.appendChild(downloadLink)
 
     // TODO: handle fetch response and manage the domain
     // TODO: pass in output langauge as a query param
@@ -54,7 +54,7 @@ const handleRecordStop = async (event, recordedChunks) => {
         }
 
         const translationInfo = await response.json()
-        const { translationId } = translationInfo
+        const translationId = translationInfo['_id']
         const translation = await pollForTranslation(translationId)
         console.log(translation) // TODO: manage what to do with this translation object to display it to user
     } catch (err) {
