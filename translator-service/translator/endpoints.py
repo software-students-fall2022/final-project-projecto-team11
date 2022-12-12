@@ -10,9 +10,13 @@ def add_job():
     if language != "en" and language not in supported_languages:
         return "outputLanguage not in acceptable languages!", 400
 
+    # Get user ID if it exists, and add it to the translation.
+    user = request.args.get('userId')
+    user = None if user=='' else user
+
     # Create a new translation object with the data received.
     translation = {
-        "user": None,
+        "user": user,
         "translation": {
             "outputLanguage": language
         },
