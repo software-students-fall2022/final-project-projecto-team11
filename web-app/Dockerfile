@@ -10,5 +10,5 @@ ADD . /web-app
 # Install dependencies and packages
 RUN pip install -r requirements.txt
 
-# run flask app on 127.0.0.1:5000
-CMD ["python3", "-m", "flask", "--app=flaskr", "run", "--host=0.0.0.0"]
+# run flask app on 127.0.0.1:5001
+CMD ["python3", "-m", "flask", "--app=app", "run", "--host=0.0.0.0", "--port", "5001"]
