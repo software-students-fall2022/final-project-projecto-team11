@@ -2,13 +2,16 @@
 FROM python:3.9
 
 # Set working directory of image - name folder flaskr
-WORKDIR /machine-learning-client
+WORKDIR /translator-service
 
 # Add files from machine to Docker image
-ADD . /machine-learning-client
+ADD . /translator-service
+
+# Install ffmpeg into the image
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y ffmpeg
 
 # Install dependencies and packages
 RUN pip install -r requirements.txt
 
 # TODO: run ml client on 127.0.0.1:6000
-CMD ["python3", "-m", "flask", "--app=flaskr", "--debug", "run", "--host=0.0.0.0"]
+CMD ["python3", "-m", "flask", "--app=translator", "run", "--host=0.0.0.0"]
