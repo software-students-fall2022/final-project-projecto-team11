@@ -7,7 +7,7 @@ def create_app(test_config=None):
 
     # Set up DB
     if test_config is None:
-        db_conn_str = os.getenv('DB_STR', 'mongodb://localhost:27017')
+        db_conn_str = os.getenv('DB_URL', 'mongodb://localhost:27017')
         app.config.from_mapping(
             MONGO_CLIENT=MongoClient(db_conn_str)
         )
