@@ -1,0 +1,22 @@
+version: "1.0"
+services:
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  translator:
+    build: ./translator-service
+    ports:
+    - "5000:5000"
+    environment:
+      - DB_URL=mongodb://172.17.0.1:27017
+    depends_on:
+      - db
+
+  web-app:
+    build: ./web-app
+    ports:
+    - "5001:5001"
+    depends_on:
+      - translator

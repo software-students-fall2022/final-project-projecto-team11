@@ -1,8 +1,10 @@
 import pymongo
+import os
 
 def get_db():
     try:
-        client = pymongo.MongoClient('mongodb://localhost:27017')
+        conn_str = os.getenv('DB_URL', 'mongodb://localhost:27017')
+        client = pymongo.MongoClient(conn_str)
         db = client.get_database('translator')
         return pymongo.collection.Collection(db, 'translations')
     except pymongo.errors.ConnectionFailure as e:

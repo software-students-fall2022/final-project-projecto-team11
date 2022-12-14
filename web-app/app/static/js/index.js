@@ -3,15 +3,15 @@ const pollForTranslation = async (translationId) => {
         await new Promise(r => setTimeout(r, 2000));
         console.log('Querying job status.')
         try {
-            const response = await fetch(`http://localhost:5000/translation/${translationId}`)
-            
-            if (response.status >= 400) {
-                throw new Error(response.statusText)
-            }
+            const response = await fetch(`http://127.0.0.1:5000/translation/${translationId}`)
 
             const translationInfo = await response.json()
             console.log(translationInfo)
             const { status, translation } = translationInfo
+
+            if (status.message === 'FAILURE') {
+                return translation // TODO: catch this error somehow without loopingdocker 
+            }
 
             if (status.message !== 'IN_QUEUE' && status.message !== 'PROCESSING') {
                 return translation
@@ -29,17 +29,9 @@ const handleRecordStop = async (event, recordedChunks) => {
     recordedChunks.length = 0
     const outputLanguage = document.querySelector('#input-output-language').value
 
-    // this is just for testing purposes to see if the audio recorded
-    // const downloadLink = document.createElement('a')
-    // downloadLink.textContent = 'Download Audio'
-    // downloadLink.href = URL.createObjectURL(recordingBlob)
-    // downloadLink.download = 'test.wav'
-    // document.body.appendChild(downloadLink)
-
     // TODO: handle fetch response and manage the domain
-    // TODO: pass in output langauge as a query param
     try {
-        const response = await fetch(`http://localhost:5000/translation?outputLanguage=${outputLanguage}&userId=`, {
+        const response = await fetch(`http://127.0.0.1:5000/translation?outputLanguage=${outputLanguage}&userId=`, {
             method: 'POST',
             mode: 'cors',
             body: recordingBlob,
@@ -56,7 +48,8 @@ const handleRecordStop = async (event, recordedChunks) => {
         const translationInfo = await response.json()
         const translationId = translationInfo['_id']
         const translation = await pollForTranslation(translationId)
-        console.log(translation) // TODO: manage what to do with this translation object to display it to user
+        console.log(translation)
+        document.querySelector('#translation-display').textContent = JSON.stringify(translation)
     } catch (err) {
         console.log(err)
     }
