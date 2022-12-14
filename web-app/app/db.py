@@ -36,7 +36,7 @@ def insert_sample_data(client, user_fn='sample_user_data.json', translation_fn='
 
 if __name__ == "__main__":
     # import sample data into the database
-    if len(sys.argv) > 1:
-        insert_sample_data(pymongo.MongoClient('mongodb://localhost:27017'), sys.argv[1])
+    if len(sys.argv) > 2:
+        insert_sample_data(pymongo.MongoClient('mongodb://localhost:27017'), sys.argv[1], sys.argv[2])
     else:
         insert_sample_data(pymongo.MongoClient('mongodb://localhost:27017'))
