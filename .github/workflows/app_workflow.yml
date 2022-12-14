@@ -52,6 +52,6 @@ jobs:
           name: app_test_results
           path: ./web-app/app_test_results.txt
 
-  delivery_deployment: 
-    needs: coverage_and_pytest
+  #delivery_deployment: 
+  #  needs: coverage_and_pytest
     

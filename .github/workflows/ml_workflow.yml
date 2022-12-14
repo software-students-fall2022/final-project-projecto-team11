@@ -47,5 +47,5 @@ jobs:
           name: ml_test_results
           path: ./machine-learning-client/machine_test_results.txt
       
-  machine_learning_deployment:
-    needs: machine_learning_test
+  #machine_learning_deployment:
+  #  needs: machine_learning_test
