@@ -7,8 +7,9 @@ def create_app(test_config=None):
 
     # Set up DB
     if test_config is None:
+        db_conn_str = os.getenv('DB_STR', 'mongodb://localhost:27017')
         app.config.from_mapping(
-            MONGO_CLIENT=MongoClient(get_conn_str())
+            MONGO_CLIENT=MongoClient(db_conn_str)
         )
     else:
         app.config.from_mapping(test_config)
@@ -25,16 +26,3 @@ def create_app(test_config=None):
     app.register_blueprint(main_blueprint)
 
     return app
-
-# Generates connection string from env vars
-def get_conn_str():
-    # optional db auth and options
-    db_user = os.getenv('DB_USER', '')
-    db_pass = os.getenv('DB_PASS', '')
-    db_user_pass = f'{db_user}:{db_pass}@' if db_user else ''
-    # optional options ex: '/?authSource=admin'
-    db_opts = os.getenv('DB_OPTS', '')
-    # required host and port
-    db_host = os.getenv('DB_HOST', 'localhost')
-    db_port = os.getenv('DB_PORT', '27017')
-    return f'mongodb://{db_user_pass}{db_host}:{db_port}'
