@@ -36,12 +36,14 @@ jobs:
         run: | 
           python -m pip install --upgrade pip
           pip install pytest
+          sudo apt-get install portaudio19-dev
+          sudo apt-get install ffmpeg
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi 
 
       - name: Run Unit Tests & Coverage Analysis
         run: | 
-          coverage run --omit ./tests/test.py -m pytest ./tests/test.py > ml_test_results.txt
-          python3 -m coverage report > ml_coverage_results.txt 
+          coverage run --omit ./tests/test.py,./translator/__init__.py -m pytest ./tests/test.py > ml_test_results.txt
+          python -m coverage report > ml_coverage_results.txt 
         #if was useful/required, could separate each upload from each python version to different artifact
 
       - name: Upload Coverage Results

@@ -41,7 +41,7 @@ jobs:
       - name: Run Unit Tests & Coverage Analysis
         run: | 
           coverage run --omit ./tests/test.py -m pytest ./tests/test.py > app_test_results.txt
-          python3 -m coverage report > app_coverage_results.txt 
+          python -m coverage report > app_coverage_results.txt 
         #if was useful/required, could separate each upload from each python version to different artifact
 
       - name: Upload Coverage Results
