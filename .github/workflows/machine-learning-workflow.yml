@@ -59,6 +59,9 @@ jobs:
   delivery_deployment_to_dockerhub: 
     needs: coverage_and_pytest
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./machine-learning-client
 
     steps:
       - name: check out
