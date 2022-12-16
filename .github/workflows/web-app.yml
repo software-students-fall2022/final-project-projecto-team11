@@ -1,0 +1,61 @@
+#This workflow covers the CI/CD for the Web App portion
+name: Web App Workflow
+run-name: ${{ github.actor }}'s Web App Workflow
+
+#Only should run on pushes to the main branch as per instructions
+on: 
+  push:
+    branches: 
+      - 'main'
+      - 'master'
+
+jobs:
+  #First job is done to test and check coverage of the web app 
+  coverage_and_pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web-app
+    timeout-minutes: 10
+
+    #Which python version to run on
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: setting up recent python versions (3.8, 3.9, 3.10)
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Update pip, install requirements
+        run: | 
+          python -m pip install --upgrade pip
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi 
+
+      - name: Run Unit Tests & Coverage Analysis
+        run: | 
+          coverage run --omit ./tests/test.py -m pytest ./tests/test.py > app_test_results.txt
+          python3 -m coverage report > app_coverage_results.txt 
+        #if was useful/required, could separate each upload from each python version to different artifact
+
+      - name: Upload Coverage Results
+        uses: actions/upload-artifact@v3
+        with: 
+          name: app_coverage_results
+          path: app_coverage_results.txt
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: app_test_results
+          path: app_test_results.txt
+          
+#delivery_deployment: 
+
+# needs: coverage_and_pytest
