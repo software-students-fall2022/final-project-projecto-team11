@@ -1,6 +1,6 @@
-#This workflow covers the CI/CD for the Translator portion
-name: Translator Service Workflow
-run-name: ${{ github.actor }}'s Translator Workflow
+#This workflow covers the CI/CD for the Machine Learning portion
+name: Machine Learning Workflow
+run-name: ${{ github.actor }}'s Machine Learning Workflow
 
 #Only should run on pushes to the main branch as per instructions
 on: 
@@ -10,12 +10,12 @@ on:
       - 'master'
 
 jobs:
-  #First job is done to test and check coverage of the translator
+  #First job is done to test and check coverage of the machine learning container 
   coverage_and_pytest:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./translator-service
+        working-directory: ./machine-learning-client
     timeout-minutes: 10
 
     #Which python version to run on
@@ -40,21 +40,21 @@ jobs:
 
       - name: Run Unit Tests & Coverage Analysis
         run: | 
-          coverage run --omit ./tests/test.py -m pytest ./tests/test.py > translator_test_results.txt
-          python3 -m coverage report > translator_coverage_results.txt 
+          coverage run --omit ./tests/test.py -m pytest ./tests/test.py > ml_test_results.txt
+          python3 -m coverage report > ml_coverage_results.txt 
         #if was useful/required, could separate each upload from each python version to different artifact
 
       - name: Upload Coverage Results
         uses: actions/upload-artifact@v3
         with: 
-          name: translator_coverage_results
-          path: translator_coverage_results.txt
+          name: ml_coverage_results
+          path: ml_coverage_results.txt
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
         with:
-          name: translator_test_results
-          path: translator_test_results.txt
+          name: ml_test_results
+          path: ml_test_results.txt
           
 #delivery_deployment: 
 
