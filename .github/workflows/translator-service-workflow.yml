@@ -82,3 +82,14 @@ jobs:
           context: ./translator-service
           push: true
           tags: chiaos/se_final_project_repo:translator-latest
+
+  deployment-to-digitalocean:
+    needs: delivery_deployment_to_dockerhub
+    runs-on: ubuntu-latest
+    
+    steps:
+      name: DigitalOcean App Platform Action
+      uses: digitalocean/app_action@main
+      with:
+        app_name: translator_service
+        token: ${{secrets.DIGITALOCEAN_API_ACCESS}}
