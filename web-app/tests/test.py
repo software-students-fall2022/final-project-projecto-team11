@@ -9,36 +9,20 @@ class Tests: # pragma: no cover
     @pytest.fixture
     def mongo_client(self):
         mock_client = mongomock.MongoClient('mongodb://localhost:27017')
-        mock_translations_collection = mock_client.translator.users
+        mock_translations_collection = mock_client.translator.translations
         mock_translations_collection.insert_one({
-            "username": "admin",
-            "password": "supersecurepassword",
-            "translations": [
-                {
-                    "inputLanguage": "de",
-                    "inputText": "Guten tag.",
-                    "outputText": "Good morning.",
-                    "outputLanguage": "en"
-                },
-                {
-                    "inputLanguage": "es",
-                    "inputText": "Mucho gusto.",
-                    "outputText": "Nice to meet you.",
-                    "outputLanguage": "en"
-                },
-                {
-                    "inputLanguage": "fr",
-                    "inputText": "Pardon, excusez-moi.",
-                    "outputText": "Pardon, excuse me.",
-                    "outputLanguage": "en"
-                },
-                {
-                    "inputLanguage": "ja",
-                    "inputText": "ごめんなさい。",
-                    "outputText": "I am sorry.",
-                    "outputLanguage": "en"
-                }
-            ]
+            "_id": "634f028fa11c10159ae12607",
+            "user": "634f028fa11c10159ae12607",
+            "translation": {
+                "inputLanguage": "de",
+                "inputText": "Guten tag.",
+                "outputText": "Good morning.",
+                "outputLanguage": "en"
+            },
+            "status": {
+                "message": "SUCCESS",
+                "update": 1666122383
+            }
         })
         yield mock_client
         mock_translations_collection.drop()
@@ -55,63 +39,59 @@ class Tests: # pragma: no cover
     def client(self, app):
         return app.test_client()
 
-    def test_get_connection_string(self):
-        conn_str = get_conn_str()
-        assert conn_str == 'mongodb://localhost:27017'
-        os.environ["DB_USER"] = "dbadmin"
-        os.environ["DB_PASS"] = "password"
-        os.environ["DB_HOST"] = "127.0.0.1"
-        conn_str = get_conn_str()
-        assert conn_str == 'mongodb://dbadmin:password@127.0.0.1:27017'
-
     def test_insert_sample_data(self, mongo_client): 
         mongo_client.translator.users.drop()
-        assert get_translations_collection(mongo_client).find_one({"username":"admin"}) is None
+        assert get_users_collection(mongo_client).find_one({"name":"admin"}) is None
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        sample_data_path = os.path.join(dir_path, './sample_data.json')
-        insert_sample_data(mongo_client, sample_data_path)
+        user_data_path = os.path.join(dir_path, './sample_user_data.json')
+        translation_data_path = os.path.join(dir_path, './sample_translation_data.json')
+        insert_sample_data(mongo_client, user_data_path, translation_data_path)
 
-        assert get_translations_collection(mongo_client).find_one({"translations.inputLanguage":"de"}) is not None
+        assert get_translations_collection(mongo_client).find_one({"translation.inputLanguage":"de"}) is not None
 
     def test_get_translations_collection(self, mongo_client):
         translations_collection = get_translations_collection(mongo_client)
         input_languages = ["de", "es", "fr", "ja"]
         for input_language in input_languages:
-            assert get_translations_collection(mongo_client).find_one({"translations.inputLanguage": input_language}) is not None
-        assert get_translations_collection(mongo_client).find_one({"translations.inputLanguage": "zh"}) is None
+            assert get_translations_collection(mongo_client).find_one({"translation.inputLanguage": input_language}) is not None
+        assert get_translations_collection(mongo_client).find_one({"translation.inputLanguage": "zh"}) is None
 
-    def test_logged_out_routes(self, client):
-        # TODO: Log client in
-        logout_user()
-        # TODO: Check the actual response data
-        response = client.get("/login")
-        assert response.status_code == 200
-        response = client.get("/register")
-        assert response.status_code == 200
+    def test_get_users_collection(self, mongo_client):
+        users_collection = get_users_collection(mongo_client)
+        assert users_collections.find_one({"name": "admin"}) is not None
+        assert users_collections.find_one({"name": "user"}) is None
+        
+    # Routes:
+    # noauth - User not logged in & cannot see restricted pages
+    def test_noauth_login(self, client):
+        # TODO: Ensure user is logged out
+        # TODO: Test the logged out /login page
 
-    def test_logged_out_routes(self, client):
-        # TODO: Log the client in
-        # TODO: Check the actual response data
-        response = client.get("/")
-        assert response.status_code == 200
-        response = client.get("/history")
-        assert response.status_code == 200
-        response = client.get("/logout")
-        # TODO: Check that the client was correctly redirected
+    def test_noauth_register(self, client):
+        # TODO: Test the logged out /register page
+    
+    def test_noauth_home(self, client):
+        # TODO: Test for redirect to /login
+    
+    def test_noauth_history(self, client):
+        # TODO: Test for redirect to /login
 
-    def test_translation_endpoint_update(self, client, mongo_client):
-        response1 = client.get("/history")
-        #assert b'"inputLanguage":"ja"' in response1.data
-        assert b'"inputLanguage":"zh"' not in response1.data
+    def test_user_login(self, client):
+        # TODO: Test logging in the user
+    
+    # auth - User logged in & can see restricted pages
+    def test_auth_login(self, client):
+        # TODO: Test for redirect to home
 
-        mongo_client.translator.translations.insert_one({
-            "inputLanguage": "zh",
-            "inputText": "不用谢。",
-            "outputText": "You're welcome."
-        })
+    def test_auth_register(self, client):
+        # TODO: Test for redirect to home
+    
+    def test_auth_home(self, client):
+        # TODO: Test for content on home page
 
-        response2 = client.get("/history")
-        # TODO: test actual update once data is populated on history page
-        # assert b'"inputLanguage":"zh"' in response2.data
-        # assert b'"inputLanguage":"ja"' not in response2.data
+    def test_auth_history(self, client):
+        # TODO: Test for content on history page
+
+    def test_logout():
+        # TODO: Test logging the user out
