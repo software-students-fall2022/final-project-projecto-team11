@@ -93,7 +93,7 @@ jobs:
       - name: DigitalOcean App Platform Action
         uses: digitalocean/app_action@main
         with:
-          app_name: web_app
+          app_name: web-app
           token: ${{secrets.DIGITALOCEAN_API_ACCESS}}
 
 
