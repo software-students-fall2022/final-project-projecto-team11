@@ -91,5 +91,5 @@ jobs:
       - name: DigitalOcean App Platform Action
         uses: digitalocean/app_action@main
         with:
-          app_name: translator_service
+          app_name: translator-service
           token: ${{secrets.DIGITALOCEAN_API_ACCESS}}
