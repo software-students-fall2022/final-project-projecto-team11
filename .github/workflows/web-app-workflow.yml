@@ -83,7 +83,7 @@ jobs:
         with:
           context: ./web-app
           push: true
-          tags: chiaos/se_final_project_repo:web-app-latest
+          tags: chiaos/se_final_project_repo:webapp-latest
 
   deployment-to-digitalocean:
     needs: delivery_deployment_to_dockerhub
