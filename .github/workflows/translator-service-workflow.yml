@@ -1,6 +1,6 @@
-#This workflow covers the CI/CD for the Translator portion
 name: Translator Service Workflow
 run-name: ${{ github.actor }}'s Translator Workflow
+#This workflow covers the CI/CD for the Translator portion
 
 #Only should run on pushes to the main branch as per instructions
 on: 
@@ -56,6 +56,40 @@ jobs:
           name: translator_test_results
           path: translator_test_results.txt
           
-#delivery_deployment: 
+  delivery_deployment_to_dockerhub: 
+    needs: coverage_and_pytest
+    runs-on: ubuntu-latest
 
-# needs: coverage_and_pytest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login into Docker
+        uses: docker/login-action@v2
+        with: 
+          username: ${{secrets.DOCKER_USER_NAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Build docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./translator-service
+          push: true
+          tags: chiaos/se_final_project_repo:translator-latest
+
+  deployment-to-digitalocean:
+    needs: delivery_deployment_to_dockerhub
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: DigitalOcean App Platform Action
+        uses: digitalocean/app_action@main
+        with:
+          app_name: translator-service
+          token: ${{secrets.DIGITALOCEAN_API_ACCESS}}
