@@ -88,8 +88,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      name: DigitalOcean App Platform Action
-      uses: digitalocean/app_action@main
-      with:
-        app_name: translator_service
-        token: ${{secrets.DIGITALOCEAN_API_ACCESS}}
+      - name: DigitalOcean App Platform Action
+        uses: digitalocean/app_action@main
+        with:
+          app_name: translator_service
+          token: ${{secrets.DIGITALOCEAN_API_ACCESS}}
