@@ -13,12 +13,12 @@ from translator import mlfunctions
 ])
 def test_translate(text, output_lang, expected_output, model_tr, tokenizers):
     # Ensure that the function returns the expected translation for various input phrases
-    assert translate(text, output_lang, model_tr, tokenizers) == expected_output
+    assert mlfunctions.translate(text, output_lang, model_tr, tokenizers) == expected_output
 
 def test_translate_unsupported_language(model_tr, tokenizers):
     # Ensure that the function raises a KeyError when given an unsupported language
     with pytest.raises(KeyError):
-        translate("hello", "xyz", model_tr, tokenizers)
+        mlfunctions.translate("hello", "xyz", model_tr, tokenizers)
 
 @pytest.fixture
 def test_db():
