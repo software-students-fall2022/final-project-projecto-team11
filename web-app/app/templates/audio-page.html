@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Recorder</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #000000;
+            color: #000000;
+            text-align: center;
+        }
+
+        .wrapper {
+            margin: 100px auto;
+            width: 400px;
+        }
+
+        .form {
+            display: inline-block;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 3px;
+            box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.3);
+            font-size: 1em;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 2em;
+            font-weight: 300;
+        }
+
+        .recorder {
+            margin: 20px 0;
+        }
+
+        .recorder audio {
+            width: 100%;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        input[type="button"] {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #BDBDBD;
+            border-radius: 3px;
+            color: #212121;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        input[type="button"]:hover {
+            background-color: #9E9E9E;
+        }
+
+        .divider {
+            margin: 20px 0;
+            height: 1px;
+            width: 100%;
+            background-color: #BDBDBD;
+        }
+
+        .links {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        // Initialize the audio recorder
+        let audioRecorder = null;
+
+        // Initialize the audio player
+        let audioPlayer = null;
+
+        // Start recording the audio
+        function startRecording() {
+            // Create the audio recorder
+            audioRecorder = new MediaRecorder(audioPlayer.srcObject);
+
+            // Start recording the audio
+            audioRecorder.start();
+
+            // Update the UI
+            document.getElementById('start-button').style.display = 'none';
+            document.getElementById('stop-button').style.display = 'inline-block';
+        }
+
+        // Start recording the audio
+        function startRecording() {
+            // Initialize the audio player
+            audioPlayer = new Audio();
+
+            // Request access to the user's microphone
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function(stream) {
+                    // Set the source of the audio player to the user's microphone
+                    audioPlayer.srcObject = stream;
+
+                    // Create the audio recorder
+                    audioRecorder = new MediaRecorder(audioPlayer.srcObject);
+
+                    // Start recording the audio
+                    audioRecorder.start();
+
+                    // Update the UI
+                    document.getElementById('start-button').style.display = 'none';
+                    document.getElementById('stop-button').style.display = 'inline-block';
+                });
+        }
+
+        // Stop recording the audio
+        function stopRecording() {
+            // Stop the audio recorder
+            audioRecorder.stop();
+
+            // Update the UI
+            document.getElementById('stop-button').style.display = 'none';
+            document.getElementById('play-button').style.display = 'inline-block';
+
+            // Create an audio player for the recorded audio
+            audioPlayer = new Audio();
+
+            // Get the recorded audio as a blob
+            audioRecorder.ondataavailable = function(event) {
+                audioPlayer.src = URL.createObjectURL(event.data);
+            }
+        }
+
+        // Play the recorded audio
+        function playAudio() {
+            // Play the recorded audio
+            audioPlayer.play();
+
+            // Update the UI
+            document.getElementById('play-button').style.display = 'none';
+            document.getElementById('stop-playing-button').style.display = 'inline-block';
+        }
+
+        // Stop playing the recorded audio
+        function stopPlaying() {
+            // Stop playing the recorded audio
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+
+            // Update the UI
+            document.getElementById('stop-playing-button').style.display = 'none';
+            document.getElementById('play-button').style.display = 'inline-block';
+        }
+        </script>
+        <body>
+            <div class="wrapper">
+                <div class="form">
+                    <h1>Audio Recorder</h1>
+
+                    <div class="recorder">
+                        <audio></audio>
+                    </div>
+
+                    <div class="buttons">
+                        <input id="start-button" type="button" value="Start Recording" onclick="startRecording()"/>
+                        <input id="stop-button" type="button" value="Stop Recording" onclick="stopRecording()" style="display: none;"/>
+                        <input id="play-button" type="button" value="Play" onclick="playAudio()" style="display: none;"/>
+                        <input id="stop-playing-button" type="button" value="Stop Playing" onclick="stopPlaying()" style="display: none;"/>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="links">
+                        
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+
+
