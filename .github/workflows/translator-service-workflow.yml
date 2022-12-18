@@ -1,6 +1,6 @@
-#This workflow covers the CI/CD for the Translator portion
 name: Translator Service Workflow
 run-name: ${{ github.actor }}'s Translator Workflow
+#This workflow covers the CI/CD for the Translator portion
 
 #Only should run on pushes to the main branch as per instructions
 on: 
