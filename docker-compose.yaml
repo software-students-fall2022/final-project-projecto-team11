@@ -11,12 +11,16 @@ services:
     - "5000:5000"
     environment:
       - DB_URL=mongodb://172.17.0.1:27017
+      - PYTHONUNBUFFERED=1
     depends_on:
       - db
 
   web-app:
     build: ./web-app
     ports:
-    - "5001:5001"
+      - "5001:5001"
+    environment:
+      - DB_URL=mongodb://172.17.0.1:27017
+      - PYTHONUNBUFFERED=1
     depends_on:
       - translator

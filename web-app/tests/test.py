@@ -1,6 +1,6 @@
 from app import create_app, get_conn_str
 from app.auth import logout_user
-from app.db import get_translations_collection, insert_sample_data
+from app.db import get_translations_collection, get_users_collection, insert_sample_data
 import pytest
 import mongomock
 import os
@@ -59,39 +59,49 @@ class Tests: # pragma: no cover
 
     def test_get_users_collection(self, mongo_client):
         users_collection = get_users_collection(mongo_client)
-        assert users_collections.find_one({"name": "admin"}) is not None
-        assert users_collections.find_one({"name": "user"}) is None
+        assert users_collection.find_one({"name": "admin"}) is not None
+        assert users_collection.find_one({"name": "user"}) is None
         
     # Routes:
     # noauth - User not logged in & cannot see restricted pages
     def test_noauth_login(self, client):
         # TODO: Ensure user is logged out
         # TODO: Test the logged out /login page
+        assert True
 
     def test_noauth_register(self, client):
         # TODO: Test the logged out /register page
+        assert True
     
     def test_noauth_home(self, client):
         # TODO: Test for redirect to /login
+        assert True
     
     def test_noauth_history(self, client):
         # TODO: Test for redirect to /login
+        assert True
 
     def test_user_login(self, client):
         # TODO: Test logging in the user
+        assert True
     
     # auth - User logged in & can see restricted pages
     def test_auth_login(self, client):
         # TODO: Test for redirect to home
+        assert True
 
     def test_auth_register(self, client):
         # TODO: Test for redirect to home
+        assert True
     
     def test_auth_home(self, client):
         # TODO: Test for content on home page
+        assert True
 
     def test_auth_history(self, client):
         # TODO: Test for content on history page
+        assert True
 
     def test_logout():
         # TODO: Test logging the user out
+        assert True

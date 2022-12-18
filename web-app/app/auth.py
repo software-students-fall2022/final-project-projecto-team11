@@ -1,52 +1,77 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, current_app, redirect, url_for
 from . import db
+import bcrypt
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login')
+@auth.route('/login', methods=['GET'])
 def login():
-    # TODO: Set up check for if user is logged in
+    # TODO: If user is logged in, redirect them to home page:
     if False:
         return redirect(url_for('main.home'))
+    # Otherwise, give them the login form HTML template.
     return render_template('login.html')
 
 @auth.route('/login', methods=['POST'])
 def login_post():
-    # login code goes here
     email = request.form.get('email')
     password = request.form.get('password')
-    # TODO: Authentication + log in user
 
-    if True: # user auth failed
+    # If information not present, redirect back to login screen.
+    if email == None or password == None:
         return redirect(url_for('auth.login'))
+
+    # Search for a user in the database with matching username.
+    dbuserentry = db.get_users_collection(current_app.config['MONGO_CLIENT']).find_one({"username": email})
+
+    # Check provided password matches password stored in the database.
+    if not bcrypt.checkpw(password.encode('utf8'), dbuserentry['password']):
+        return redirect(url_for('auth.login'))
+    
+    # If everything matches, send logged-in user to the home page.
+    # TODO: Use this user ID to create a session
+    userID = str(dbuserentry['_id'])
     return redirect(url_for('main.home'))
 
-@auth.route('/register')
+@auth.route('/register', methods=['GET'])
 def register():
-    # TODO: Set up check for if user is logged in
+    # TODO: If user is logged in, redirect them to home page:
     if False:
         return redirect(url_for('main.home'))
     
+    # Otherwise, give them the registration form page.
     return render_template('register.html')
 
 @auth.route('/register', methods=['POST'])
 def register_post():
-    # login code goes here
     email = request.form.get('email')
     password = request.form.get('password')
     confirm = request.form.get('confirm')
 
-    if password != confirm:
+    # If information not present or not correct, redirect back to login screen.
+    if email == None or password == None or confirm == None or password != confirm:
         return redirect(url_for('auth.register'))
 
-    # TODO: Create the user
-    
+    # Check to make sure user doesn't already exist with the given email.
+    if db.get_users_collection(current_app.config['MONGO_CLIENT']).count_documents({"username": email}) > 0:
+        # User with email already exists.
+        return redirect(url_for('auth.register'))
+
+    # If we've made it to this point, it's safe to create the user.
+    result = db.get_users_collection(current_app.config['MONGO_CLIENT']).insert_one({
+        'username': email,
+        'password': bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
+    })
+
+    # Once the user has been successfully created, redirect them to the login page.
+    # TODO: If you want to do anything with the newly-created user, the ID is below.
+    userID = result.inserted_id
     return redirect(url_for('auth.login'))
 
 @auth.route('/logout')
 def logout():
-    # TODO: Set up check for if user is logged in
+    # TODO: Check if user is logged in. If user is not logged in, redirect them to the login page.
     if False:
         return redirect(url_for('auth.login'))
-    # TODO: logout user
+    # TODO: If the user is logged in, end their session (log them out).
     return redirect(url_for('auth.login'))
