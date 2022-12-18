@@ -53,5 +53,26 @@ def test_work(tid, delay, input_data, expected_output, test_db):
     assert result['status']['message'] == "SUCCESS"
 
 
+def test_add_job():
+    #test when outputLanguage is in acceptable languages
+    response = add_job(outputLanguage="en")
+    assert response.status_code == 200
+    assert "IN_QUEUE" in response.body
 
+    #est when outputLanguage is not in acceptable languages
+    response = add_job(outputLanguage="fr")
+    assert response.status_code == 400
+    assert "outputLanguage not in acceptable languages!" in response.body
+
+    #test with userId
+    response = add_job(outputLanguage="en", userId="123")
+    assert response.status_code == 200
+    assert "IN_QUEUE" in response.body
+    assert "123" in response.body
+
+    #test with empty userId
+    response = add_job(outputLanguage="en", userId="")
+    assert response.status_code == 200
+    assert "IN_QUEUE" in response.body
+    assert "None" in response.body
 
