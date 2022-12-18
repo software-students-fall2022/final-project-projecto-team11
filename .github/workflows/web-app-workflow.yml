@@ -1,6 +1,6 @@
-#This workflow covers the CI/CD for the Web App portion
 name: Web App Workflow
 run-name: ${{ github.actor }}'s Web App Workflow
+#This workflow covers the CI/CD for the Web App portion
 
 #Only should run on pushes to the main branch as per instructions
 on: 
