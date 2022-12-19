@@ -143,6 +143,13 @@
             font-weight: 500;
             box-shadow: 0 0 10px rgba(255, 255, 255);
         }
+
+        .form-control select:focus,
+        .form-control input[type="button"]:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255);
+            margin: auto;
+        }
         
     </style>
     <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
@@ -178,6 +185,9 @@
                             <option value="de">German</option>
                             <option value="hi">Hindi</option>
                         </select>
+                    </div>
+                    <div class="form-control">
+                        <button class="button" id="btn-record">Record</button>
                     </div>
                     <br><br>
                     <div id="translation-display"></div>
