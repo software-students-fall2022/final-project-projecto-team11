@@ -32,7 +32,7 @@ def history():
     for doc in cursor:
         history_data.append(doc['translation'])
 
-    print(history_data)
+    #print(history_data)
 
     message = ''
     if len(history_data) == 0:
