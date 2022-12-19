@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Recorder</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #000000;
+            color: #000000;
+            text-align: center;
+        }
+
+        .wrapper {
+            margin: 100px auto;
+            width: 400px;
+        }
+
+        .form {
+            display: inline-block;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 3px;
+            box-shadow: 0px 5px 10px rgba(255, 255, 255);
+            font-size: 1em;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 2em;
+            font-weight: 300;
+        }
+
+        .recorder {
+            margin: 20px 0;
+        }
+
+        .recorder audio {
+            width: 100%;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        input[type="button"] {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #BDBDBD;
+            border-radius: 3px;
+            border: 2px solid white;
+            background-color: black;
+            color: white;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        input[type="button"]:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255);
+        }
+        
+        .button {
+        cursor: pointer;
+        border: 2px solid white;
+        background-color: black;
+        color: white;
+        font-size: 1em;
+        padding: 10px;
+        margin: 10px;
+        box-shadow: 0 0 10px rgba(255, 255, 255);
+        position: absolute;
+        }
+
+        .button:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255);
+        }
+        
+        .title {
+        color: white;
+        font-size: 3em;
+        margin: 100;
+        text-align: center;
+        padding: 20px 0;
+      }
+
+        .divider {
+            margin: 20px 0;
+            height: 1px;
+            width: 100%;
+            background-color: #BDBDBD;
+        }
+
+        .links {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        #logout-button {
+        top: 10px;
+        right: 10px;
+        }
+
+        #history-button {
+            top: 10px;
+            left: 10px;
+        }
+        
+    </style>
+    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+    </head>
+        <body>
+            <div id="top">
+                <button class="button" id="history-button" href="{{ url_for('main.history') }}">Translation History</button>
+                <button class="button" id="logout-button" href="{{ url_for('auth.logout') }}">Logout</button>
+                <h1 class="title">Translate Anything</h1>
+            </div>
+            <div class="wrapper">
+                <div class="form">
+                    <h1>Audio Recorder</h1>
+
+                    <div class="recorder">
+                        <button class="button" id="btn-record">Record</button>
+                    </div>
+                    <br><br>
+                    <label for="language-select">Choose language:</label>
+                    <select id="language-select">
+                    <option value="german">German</option>
+                    <option value="english" selected>English</option>
+                    <option value="french">French</option>
+                    <option value="spanish">Spanish</option>
+                    <option value="hindi">Hindi</option>
+                    </select>
+                    <br><br>
+                    <div id="translation-display"></div>
+                    <div class="divider"></div>
+
+                    <div class="links">
+                    <input type="hidden" id="uid" value="{{ uid }}">
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+
+

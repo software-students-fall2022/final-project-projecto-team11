@@ -8,9 +8,14 @@ from . import db
 main = Blueprint('main', __name__)
 
 @main.route('/')
-def home():
+def landing():
+    return render_template('homepage.html')
+
+# TODO: Require login to access this page
+@main.route('/record')
+def record():
     userid = "" if SESSION_VAR_NAME not in session else session[SESSION_VAR_NAME]
-    return render_template('home.html', uid=userid)
+    return render_template('audio-page.html', uid=userid)
 
 @main.route('/history')
 def history():
