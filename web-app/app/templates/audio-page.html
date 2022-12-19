@@ -22,7 +22,7 @@
             padding: 20px;
             background-color: #ffffff;
             border-radius: 3px;
-            box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.3);
+            box-shadow: 0px 5px 10px rgba(255, 255, 255);
             font-size: 1em;
         }
 
@@ -50,7 +50,9 @@
             padding: 10px 20px;
             background-color: #BDBDBD;
             border-radius: 3px;
-            color: #212121;
+            border: 2px solid white;
+            background-color: black;
+            color: white;
             text-decoration: none;
             font-size: 1em;
             font-weight: 500;
@@ -58,8 +60,16 @@
         }
 
         input[type="button"]:hover {
-            background-color: #9E9E9E;
+            box-shadow: 0 0 15px rgba(255, 255, 255);
         }
+        
+        .title {
+        color: white;
+        font-size: 3em;
+        margin: 100;
+        text-align: center;
+        padding: 20px 0;
+      }
 
         .divider {
             margin: 20px 0;
@@ -81,6 +91,17 @@
         a:hover {
             text-decoration: underline;
         }
+        
+        #login-button {
+        top: 10px;
+        right: 10px;
+        }
+
+        #register-button {
+            top: 10px;
+            left: 10px;
+        }
+        
     </style>
     <script>
         // Initialize the audio recorder
@@ -122,6 +143,9 @@
                     // Update the UI
                     document.getElementById('start-button').style.display = 'none';
                     document.getElementById('stop-button').style.display = 'inline-block';
+                    document.getElementById('play-button').style.display = 'none';
+                    document.getElementById('re-record-button').style.display = 'none';
+                    
                 });
         }
 
@@ -133,7 +157,7 @@
             // Update the UI
             document.getElementById('stop-button').style.display = 'none';
             document.getElementById('play-button').style.display = 'inline-block';
-
+            document.getElementById('re-record-button').style.display = 'inline-block';
             // Create an audio player for the recorded audio
             audioPlayer = new Audio();
 
@@ -151,6 +175,7 @@
             // Update the UI
             document.getElementById('play-button').style.display = 'none';
             document.getElementById('stop-playing-button').style.display = 'inline-block';
+            document.getElementById('re-record-button').style.display = 'none';
         }
 
         // Stop playing the recorded audio
@@ -162,9 +187,15 @@
             // Update the UI
             document.getElementById('stop-playing-button').style.display = 'none';
             document.getElementById('play-button').style.display = 'inline-block';
+            document.getElementById('re-record-button').style.display = 'inline-block';
         }
         </script>
         <body>
+            <div id="top">
+                <button class="button" id="register-button">Register</button>
+                <button class="button" id="login-button">Login</button>
+                <h1 class="title">Translate Anything</h1>
+            </div>
             <div class="wrapper">
                 <div class="form">
                     <h1>Audio Recorder</h1>
@@ -178,12 +209,23 @@
                         <input id="stop-button" type="button" value="Stop Recording" onclick="stopRecording()" style="display: none;"/>
                         <input id="play-button" type="button" value="Play" onclick="playAudio()" style="display: none;"/>
                         <input id="stop-playing-button" type="button" value="Stop Playing" onclick="stopPlaying()" style="display: none;"/>
+                        <input type="button" id="re-record-button" value="Re-record" onclick="startRecording()" style="display: none;">
                     </div>
-
+                    <br><br>
+                    <label for="language-select">Choose language:</label>
+                    <select id="language-select">
+                    <option value="german">German</option>
+                    <option value="english" selected>English</option>
+                    <option value="french">French</option>
+                    <option value="spanish">Spanish</option>
+                    <option value="hindi">Hindi</option>
+                    </select>
+                    <br><br>
+                    <input type="button" id="translate-button" value="Translate!">
                     <div class="divider"></div>
 
                     <div class="links">
-                        
+                    <input type="hidden" id="uid" value="{{ uid }}">
                     </div>
                 </div>
             </div>
