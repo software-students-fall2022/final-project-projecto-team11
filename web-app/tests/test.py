@@ -12,7 +12,7 @@ class Tests: # pragma: no cover
         mock_users_collection = mock_client.translator.users
         mock_users_collection.insert_one({
             "_id": "634f028fa11c10159ae12606",
-            "name": "admin",
+            "username": "admin",
             "password": "adminpassword"
         })
         mock_translations_collection = mock_client.translator.translations
@@ -48,7 +48,7 @@ class Tests: # pragma: no cover
     def test_insert_sample_data(self, mongo_client): 
         mongo_client.translator.users.drop()
         mongo_client.translator.translations.drop()
-        assert get_users_collection(mongo_client).find_one({"name":"admin"}) is None
+        assert get_users_collection(mongo_client).find_one({"username":"admin"}) is None
         assert get_users_collection(mongo_client).find_one({"translation.inputLanguage":"de"}) is None
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -56,7 +56,7 @@ class Tests: # pragma: no cover
         translation_data_path = os.path.join(dir_path, './sample_translation_data.json')
         insert_sample_data(mongo_client, user_data_path, translation_data_path)
 
-        assert get_users_collection(mongo_client).find_one({"name":"admin"}) is not None
+        assert get_users_collection(mongo_client).find_one({"username":"admin"}) is not None
         assert get_translations_collection(mongo_client).find_one({"translation.inputLanguage":"de"}) is not None
 
     def test_get_translations_collection(self, mongo_client):
@@ -71,8 +71,8 @@ class Tests: # pragma: no cover
         assert get_translations_collection(mongo_client).find_one({"translation.outputLanguage": "zh"}) is None
 
     def test_get_users_collection(self, mongo_client):
-        assert get_users_collection(mongo_client).find_one({"name": "admin"}) is not None
-        assert get_users_collection(mongo_client).find_one({"name": "user"}) is None
+        assert get_users_collection(mongo_client).find_one({"username": "admin"}) is not None
+        assert get_users_collection(mongo_client).find_one({"username": "user"}) is None
         
     # Routes:
     # noauth - User not logged in & cannot see restricted pages
