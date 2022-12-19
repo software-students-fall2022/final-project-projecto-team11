@@ -102,9 +102,15 @@
           <h3>{{ outputLanguage }}</h3>
         </div>
       </template>
-
-      <!-- Dummy data for test -->
-      <div class="record">
+      {{ history }}
+        {% for translation in history %}
+            <h3>{{ translation.inputLanguage }}</h3>
+            <h3>{{ translation.inputText }}</h3>
+            <h3>{{ translation.outputText }}</h3>
+            <h3>{{ translation.outputLanguage }}</h3>
+        {% endfor %}
+      <!-- Dummy data for testing display, (uncomment for debugging)-->
+<!--       <div class="record">
         <h3>Record 1</h3>
         <h3>Record 1</h3>
         <h3>Record 1</h3>
@@ -122,9 +128,9 @@
         <h3>Record 3</h3>
         <h3>Record 3</h3>
       </div>
-
+ -->
     </div>
-    <script>
+<!--     Javascript code for displaying <script>
         const fetchRecords = async () => {
           const response = await fetch('/records');
           const records = await response.json();
@@ -144,7 +150,7 @@
   
         // retrieve the records when the page loads
         window.addEventListener('load', fetchRecords);
-      </script>
+      </script> -->
   </body>
 </html>
 
