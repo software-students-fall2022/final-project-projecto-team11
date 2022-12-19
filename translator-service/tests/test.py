@@ -1,16 +1,26 @@
 import pytest
-import threading
 import mongomock
 from translator.util import supported_languages
-from translator.endpoints import add_job
 import multiprocessing
 from bson.objectid import ObjectId
+import time
 from translator import mlfunctions, mlworker
+from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
+
+ckpt = 'facebook/m2m100_418M'
+
+# Load files to variables
+test_langs = ['arabic', 'english', 'hindi', 'portuguese', 'spanish']
+inputs = {}
+for lang in test_langs:
+    file = open(f"tests/files/{lang}.wav", "rb")
+    inputs[lang] = file.read()
+    file.close()
 
 @pytest.mark.parametrize("text,output_lang,expected_output", [
-    ("hello", "fr", "bonjour"),
-    ("goodbye", "de", "auf wiedersehen"),
-    ("how are you?", "es", "¿cómo estás?"),
+    ("hello", "fr", "Bonjour"),
+    ("goodbye", "de", "Abschied"),
+    ("how are you?", "es", "¿Cómo estás tú?"),
 ])
 def test_translate(text, output_lang, expected_output, model_tr, tokenizers):
     # Ensure that the function returns the expected translation for various input phrases
@@ -29,31 +39,47 @@ def test_db():
     yield db.translator.translations
     # Clean up any changes made to the test database
 
-@pytest.mark.parametrize("tid,delay,input_data,expected_output", [
-    (1, 0, b"Hello", {'english_text': 'Hello', 'input_language': 'en', 'input_text': 'Hello'}),
-    (2, 1, b"Bonjour", {'english_text': 'Hello', 'input_language': 'fr', 'input_text': 'Bonjour'}),
-    (3, 2, b"Hola", {'english_text': 'Hello', 'input_language': 'es', 'input_text': 'Hola'}),
+@pytest.fixture
+def model_tr():
+    yield M2M100ForConditionalGeneration.from_pretrained(ckpt)
+
+@pytest.fixture
+def tokenizers():
+    yield {lang: M2M100Tokenizer.from_pretrained(ckpt, src_lang="en", tr_lang=lang) for lang in supported_languages}
+
+@pytest.fixture
+def job_queue():
+    queue = multiprocessing.Queue()
+    yield queue
+
+@pytest.mark.parametrize("lang,expected_output", [
+    ('arabic', "Assalam Alaikum"),
+    ('english', "The book is on the table."),
+    ('hindi', "I am studying"),
+    ('portuguese', "I like to eat bananas."),
+    ('spanish', "Where is the library?")
 ])
-def test_work(tid, delay, input_data, expected_output, test_db):
-    # Set up a job in the database for the worker to process
-    job_id = test_db.insert_one({'body': input_data}).inserted_id
+def test_work(lang, expected_output, test_db, job_queue):
+    # Set up job in the database for the worker to process, add to queue.
+    job_id = str(test_db.insert_one({
+        "user": None,
+        "translation": {
+            "outputLanguage": "en"
+        },
+        "status": {
+            "message": "IN_QUEUE",
+            "update": time.time()
+        },
+        "body": inputs[lang]
+    }).inserted_id)
+    job_queue.put(job_id)
 
-    # Create a job queue and add the job to it
-    job_queue = multiprocessing.Queue()
-    job_queue.put(str(job_id))
-
-    # Create a worker thread and start it
-    worker = threading.Thread(target=mlworker.work, args=(tid, job_queue, delay))
-    worker.start()
-
-    # Wait for the worker to finish processing the job
-    worker.join()
+    # Use the main thread to go through the queue.
+    mlworker.work(0, job_queue, 0, test_db, 4)
 
     # Check that the output in the database matches the expected output
-    result = test_db.find_one({'_id': job_id})
-    assert result['translation'] == expected_output
-    assert result['status']['message'] == "SUCCESS"
-
+    result = test_db.find_one({'_id': ObjectId(job_id)})
+    assert result['translation']['outputText'] == expected_output
 
 # def test_add_job():
 #     #test when outputLanguage is in acceptable languages
