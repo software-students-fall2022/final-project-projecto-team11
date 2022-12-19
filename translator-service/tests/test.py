@@ -1,10 +1,11 @@
 import pytest
 import threading
-import time
-import translator.mlfunctions
-from translator.util import db, supported_languages
+import mongomock
+from translator.util import supported_languages
+from translator.endpoints import add_job
+import multiprocessing
 from bson.objectid import ObjectId
-from translator import mlfunctions
+from translator import mlfunctions, mlworker
 
 @pytest.mark.parametrize("text,output_lang,expected_output", [
     ("hello", "fr", "bonjour"),
@@ -24,7 +25,8 @@ def test_translate_unsupported_language(model_tr, tokenizers):
 def test_db():
     # Set up a test database for the duration of the test
     # You may need to modify this to create a new database or collection specifically for the test
-    yield db
+    db = mongomock.MongoClient('mongodb://localhost:27017')
+    yield db.translator.translations
     # Clean up any changes made to the test database
 
 @pytest.mark.parametrize("tid,delay,input_data,expected_output", [
@@ -37,11 +39,11 @@ def test_work(tid, delay, input_data, expected_output, test_db):
     job_id = test_db.insert_one({'body': input_data}).inserted_id
 
     # Create a job queue and add the job to it
-    job_queue = queue.Queue()
+    job_queue = multiprocessing.Queue()
     job_queue.put(str(job_id))
 
     # Create a worker thread and start it
-    worker = threading.Thread(target=translator.mlfunctions.work, args=(tid, job_queue, delay))
+    worker = threading.Thread(target=mlworker.work, args=(tid, job_queue, delay))
     worker.start()
 
     # Wait for the worker to finish processing the job
@@ -53,26 +55,26 @@ def test_work(tid, delay, input_data, expected_output, test_db):
     assert result['status']['message'] == "SUCCESS"
 
 
-def test_add_job():
-    #test when outputLanguage is in acceptable languages
-    response = add_job(outputLanguage="en")
-    assert response.status_code == 200
-    assert "IN_QUEUE" in response.body
+# def test_add_job():
+#     #test when outputLanguage is in acceptable languages
+#     response = add_job(outputLanguage="en")
+#     assert response.status_code == 200
+#     assert "IN_QUEUE" in response.body
 
-    #est when outputLanguage is not in acceptable languages
-    response = add_job(outputLanguage="fr")
-    assert response.status_code == 400
-    assert "outputLanguage not in acceptable languages!" in response.body
+#     #est when outputLanguage is not in acceptable languages
+#     response = add_job(outputLanguage="fr")
+#     assert response.status_code == 400
+#     assert "outputLanguage not in acceptable languages!" in response.body
 
-    #test with userId
-    response = add_job(outputLanguage="en", userId="123")
-    assert response.status_code == 200
-    assert "IN_QUEUE" in response.body
-    assert "123" in response.body
+#     #test with userId
+#     response = add_job(outputLanguage="en", userId="123")
+#     assert response.status_code == 200
+#     assert "IN_QUEUE" in response.body
+#     assert "123" in response.body
 
-    #test with empty userId
-    response = add_job(outputLanguage="en", userId="")
-    assert response.status_code == 200
-    assert "IN_QUEUE" in response.body
-    assert "None" in response.body
+#     #test with empty userId
+#     response = add_job(outputLanguage="en", userId="")
+#     assert response.status_code == 200
+#     assert "IN_QUEUE" in response.body
+#     assert "None" in response.body
 

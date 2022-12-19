@@ -28,10 +28,15 @@ const handleRecordStop = async (event, recordedChunks) => {
     const recordingBlob = new Blob(recordedChunks)
     recordedChunks.length = 0
     const outputLanguage = document.querySelector('#input-output-language').value
+    const uid = null
+
+    if (document.getElementById("uid") != null) {
+        outputLanguage = document.getElementById("uid").value
+    }
 
     // TODO: handle fetch response and manage the domain
     try {
-        const response = await fetch(`http://127.0.0.1:5000/translation?outputLanguage=${outputLanguage}&userId=`, {
+        const response = await fetch(`http://127.0.0.1:5000/translation?outputLanguage=${outputLanguage}&userId=${uid}`, {
             method: 'POST',
             mode: 'cors',
             body: recordingBlob,
