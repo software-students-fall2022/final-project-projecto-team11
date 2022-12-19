@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Translator - History</title>
     <style>
     
         @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
@@ -10,6 +11,7 @@
         text-align: center;
         margin: 0;
         padding: 0;
+        color: #fff;
       }
 
       /* Add some styling for the records */
@@ -31,6 +33,12 @@
       /* Use a responsive font size for the title */
       h3 {
         font-size: calc(0.5em + 1vw);
+      }
+
+      h4 {
+        font-size: 1rem;
+        margin-top: .1rem;
+        margin-bottom: .1rem;
       }
 
       /* Make the records take up the full width on small screens */
@@ -62,6 +70,8 @@
         margin: 100;
         text-align: center;
         padding: 20px 0;
+        margin-bottom: 3rem;
+        padding-bottom: 1rem;
       }
 
       #logout-button {
@@ -78,7 +88,25 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        
+      }
+      
+      .translation-card {
+        width: 50vw;
+        max-width: 50vw;
+        min-height: 85px;
+        padding: 10px;
+        background-color: #ffffff55;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(255,255,255,.5);
+        margin-bottom: 2rem;
+      }
+
+      .translation-card:hover {
+        background-color: #ffffff44;
+      }
+
+      .translation-card > p {
+        margin-top: 0;
       }
 
     </style>
@@ -86,49 +114,22 @@
   <body>
 
     <div id="top">
-        <button class="button" id="translate-button" onclick="location.href = '{{ url_for('home.record') }}';">Translate another audio</button>
+        <button class="button" id="translate-button" onclick="location.href = '{{ url_for('main.record') }}';">Translate another audio</button>
         <button class="button" id="logout-button" onclick="location.href = '{{ url_for('auth.logout') }}';"">Logout</button>
         <h1 class="title">Translation History</h1>
+        <h3>{{ message }}</h3>
       </div>
     
     
 
     <div id="records">
-      <template id="record-template">
-        <div class="record">
-          <h3>{{ inputLanguage }}</h3>
-          <h3>{{ inputText }}</h3>
-          <h3>{{ outputText }}</h3>
-          <h3>{{ outputLanguage }}</h3>
-        </div>
-      </template>
-      {{ history }}
-        {% for translation in history %}
-            <h3>{{ translation.inputLanguage }}</h3>
-            <h3>{{ translation.inputText }}</h3>
-            <h3>{{ translation.outputText }}</h3>
-            <h3>{{ translation.outputLanguage }}</h3>
-        {% endfor %}
-      <!-- Dummy data for testing display, (uncomment for debugging)-->
-<!--       <div class="record">
-        <h3>Record 1</h3>
-        <h3>Record 1</h3>
-        <h3>Record 1</h3>
-        <h3>Record 1</h3>
-      </div>
-      <div class="record">
-        <h3>Record 2</h3>
-        <h3>Record 2</h3>
-        <h3>Record 2</h3>
-        <h3>Record 2</h3>
-      </div>
-      <div class="record">
-        <h3>Record 3</h3>
-        <h3>Record 3</h3>
-        <h3>Record 3</h3>
-        <h3>Record 3</h3>
-      </div>
- -->
+      {% for translation in history %}
+          <div class="translation-card">
+            <p>{{ translation.inputLanguage }} &#x2192; {{ translation.outputLanguage }}</p>
+            <h4>{{ translation.inputText }}</h4>
+            <h4>{{ translation.outputText }}</h4>
+          </div>
+      {% endfor %}
     </div>
   </body>
 </html>

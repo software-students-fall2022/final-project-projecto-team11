@@ -25,18 +25,18 @@ def login_post():
 
     # If information not present, redirect back to login screen.
     if email == None or password == None:
-        return redirect(url_for('auth.loginerror'))
+        return render_template('login-page.html', error='Please fill out all fields.')
 
     # Search for a user in the database with matching username.
     dbuserentry = db.get_users_collection(current_app.config['MONGO_CLIENT']).find_one({"username": email})
 
     # Check if user is null, if so redirect.
     if dbuserentry == None:
-        return redirect(url_for('auth.loginerror'))
+        return render_template('login-page.html', error='Login credentials incorrect.')
 
     # Check provided password matches password stored in the database.
     if not bcrypt.checkpw(password.encode('utf8'), dbuserentry['password']):
-        return redirect(url_for('auth.loginerror'))
+        return render_template('login-page.html', error='Login credentials incorrect.')
     
     # If everything matches, send logged-in user to the home page.
     # Use this user ID to create a session
@@ -59,13 +59,16 @@ def register_post():
     confirm = request.form.get('confirm')
 
     # If information not present or not correct, redirect back to login screen.
-    if email == None or password == None or confirm == None or password != confirm:
-        return redirect(url_for('auth.register'))
+    if email == None or password == None or confirm == None:
+        return render_template('register-page.html', error="Please fill out all the fields.")
+    
+    if password != confirm:
+        return render_template('register-page.html', error="Passwords must match!")
 
     # Check to make sure user doesn't already exist with the given email.
     if db.get_users_collection(current_app.config['MONGO_CLIENT']).count_documents({"username": email}) > 0:
         # User with email already exists.
-        return redirect(url_for('auth.register'))
+        return render_template('register-page.html', error="Email already in use!")
 
     # If we've made it to this point, it's safe to create the user.
     db.get_users_collection(current_app.config['MONGO_CLIENT']).insert_one({
