@@ -1,5 +1,4 @@
-from app import create_app, get_conn_str
-from app.auth import logout_user
+from app import create_app
 from app.db import get_translations_collection, get_users_collection, insert_sample_data
 import pytest
 import mongomock
@@ -65,43 +64,96 @@ class Tests: # pragma: no cover
     # Routes:
     # noauth - User not logged in & cannot see restricted pages
     def test_noauth_login(self, client):
-        # TODO: Ensure user is logged out
-        # TODO: Test the logged out /login page
-        assert True
+        # Ensure user is logged out
+        response = client.get("/record")
+        assert response.status_code == 302
+        assert response.request.path == "/login"
+
+        response = client.get("/history")
+        assert response.status_code == 302
+        assert response.request.path == "/login"
+
+        # Test the logged out /login page
+        response = client.get("/login")
+        assert response.status_code == 200
+        assert "Login" in response.data
+    
+    def test_noauth_homepage(self, client):
+        # Test the logged out /register page
+        response = client.get("/")
+        assert response.status_code == 200
+        assert "Translate Anything" in response.data
 
     def test_noauth_register(self, client):
-        # TODO: Test the logged out /register page
-        assert True
+        # Test the logged out /register page
+        response = client.get("/register")
+        assert response.status_code == 200
+        assert "Register" in response.data
     
-    def test_noauth_home(self, client):
-        # TODO: Test for redirect to /login
-        assert True
+    def test_noauth_record(self, client):
+        # Test for redirect to /login
+        response = client.get("/record")
+        assert response.status_code == 302
+        assert response.request.path == "/login"
     
     def test_noauth_history(self, client):
-        # TODO: Test for redirect to /login
-        assert True
+        # Test for redirect to /login
+        response = client.get("/history")
+        assert response.status_code == 302
+        assert response.request.path == "/login"
 
     def test_user_login(self, client):
-        # TODO: Test logging in the user
-        assert True
+        # Test logging in the user
+        response = client.post("/login", data={
+            "email": "admin",
+            "password": "adminpassword",
+        })
+        assert response.status_code == 200
     
     # auth - User logged in & can see restricted pages
     def test_auth_login(self, client):
-        # TODO: Test for redirect to home
-        assert True
+        # Test for redirect to home
+        response = client.get("/login")
+        assert response.status_code == 302
+        assert response.request.path == "/"
 
     def test_auth_register(self, client):
-        # TODO: Test for redirect to home
-        assert True
+        # Test for redirect to home
+        response = client.get("/register")
+        assert response.status_code == 302
+        assert response.request.path == "/"
     
-    def test_auth_home(self, client):
-        # TODO: Test for content on home page
-        assert True
+    def test_auth_record(self, client):
+        # Test for content on home page
+        response = client.get("/record")
+        assert response.status_code == 200
+        assert "Audio Recorder" in response.data
 
     def test_auth_history(self, client):
-        # TODO: Test for content on history page
-        assert True
+        # Test for content on history page
+        response = client.get("/history")
+        assert response.status_code == 200
+        assert "Translation History" in response.data
+        assert "Guten tag." in response.data
 
     def test_logout():
-        # TODO: Test logging the user out
-        assert True
+        # Test logging the user out
+        response = client.get("/logout")
+        assert response.status_code == 302
+        assert response.request.path == "/login"
+        # Test that the user is logged out and can no longer access record page
+        response = client.get("/record")
+        assert response.status_code == 302
+        assert response.request.path == "/login"
+
+    def test_user_register(self, client, mongo_client):
+        response = client.post("/register", data={
+            "email": "admin1",
+            "password": "adminpassword1",
+            "confirm": "adminpassword1"
+        })
+        # redirect to login upon successful registration
+        assert response.status_code == 302
+        # Check DB to see if entry was added
+        users_collection = get_users_collection(mongo_client)
+        assert users_collection.find_one({"name": "admin1"}) is not None
