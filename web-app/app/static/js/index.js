@@ -27,11 +27,11 @@ const handleRecordStop = async (event, recordedChunks) => {
     event.preventDefault()
     const recordingBlob = new Blob(recordedChunks)
     recordedChunks.length = 0
-    const outputLanguage = document.querySelector('#input-output-language').value
-    const uid = null
+    const outputLanguage = document.querySelector('#output-language').value
+    uid = null
 
     if (document.getElementById("uid") != null) {
-        outputLanguage = document.getElementById("uid").value
+        uid = document.getElementById("uid").value
     }
 
     // TODO: handle fetch response and manage the domain
@@ -54,7 +54,7 @@ const handleRecordStop = async (event, recordedChunks) => {
         const translationId = translationInfo['_id']
         const translation = await pollForTranslation(translationId)
         console.log(translation)
-        document.querySelector('#translation-display').textContent = JSON.stringify(translation)
+        document.querySelector('#translation-display').textContent = translation['outputText']
     } catch (err) {
         console.log(err)
     }
