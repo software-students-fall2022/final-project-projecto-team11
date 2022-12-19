@@ -117,6 +117,32 @@
             top: 10px;
             left: 10px;
         }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+            align-items: center;
+        }
+
+        .form-control label {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .form-control select,
+        .form-control input[type="button"] {
+            padding: 10px;
+            background-color: #BDBDBD;
+            border-radius: 3px;
+            border: 2px solid white;
+            background-color: black;
+            color: white;
+            font-size: 1em;
+            font-weight: 500;
+            box-shadow: 0 0 10px rgba(255, 255, 255);
+        }
         
     </style>
     <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
@@ -131,18 +157,28 @@
                 <div class="form">
                     <h1>Audio Recorder</h1>
 
-                    <div class="recorder">
+                    <!-- <div class="recorder">
                         <button class="button" id="btn-record">Record</button>
-                    </div>
+                    </div> -->
                     <br><br>
-                    <label for="output-language">Choose language:</label>
+                    <!-- <label for="output-language">Choose language:</label>
                     <select id="output-language">
                         <option value="de">German</option>
                         <option value="en" selected>English</option>
                         <option value="fr">French</option>
                         <option value="es">Spanish</option>
                         <option value="hi">Hindi</option>
-                    </select>
+                    </select> -->
+                    <div class="form-control">
+                        <label for="output-language">Select a Language:</label>
+                        <select id="output-language">
+                            <option value="en" selected>English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="hi">Hindi</option>
+                        </select>
+                    </div>
                     <br><br>
                     <div id="translation-display"></div>
                     <div class="divider"></div>
