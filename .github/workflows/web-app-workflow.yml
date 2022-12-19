@@ -73,7 +73,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - name: debug secrets
         run: |
-          echo ${{ secrets.DOCKER_USER_NAME }}
+          echo "Chiaos" = ${{ secrets.DOCKER_USER_NAME }}
 
       - name: Login to Docker
         uses: docker/login-action@v2
