@@ -9,6 +9,12 @@
 
 An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
 
+## Links
+
+[Docker Hub](https://hub.docker.com/r/chiaos/se_final_project_repo)
+
+[Digital Ocean Web App Deployment](https://web-app-oyfrn.ondigitalocean.app/)
+
 ## Members of Team 11
 [Michael Ma](https://github.com/mma01us)
 
