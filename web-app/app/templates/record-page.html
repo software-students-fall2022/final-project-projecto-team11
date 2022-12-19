@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Translator - History</title>
     <style>
     
         @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
@@ -10,6 +11,7 @@
         text-align: center;
         margin: 0;
         padding: 0;
+        color: #fff;
       }
 
       /* Add some styling for the records */
@@ -86,9 +88,10 @@
   <body>
 
     <div id="top">
-        <button class="button" id="translate-button" onclick="location.href = '{{ url_for('home.record') }}';">Translate another audio</button>
+        <button class="button" id="translate-button" onclick="location.href = '{{ url_for('main.record') }}';">Translate another audio</button>
         <button class="button" id="logout-button" onclick="location.href = '{{ url_for('auth.logout') }}';"">Logout</button>
         <h1 class="title">Translation History</h1>
+        <h3>{{ message }}</h3>
       </div>
     
     
@@ -102,33 +105,12 @@
           <h3>{{ outputLanguage }}</h3>
         </div>
       </template>
-      {{ history }}
-        {% for translation in history %}
-            <h3>{{ translation.inputLanguage }}</h3>
-            <h3>{{ translation.inputText }}</h3>
-            <h3>{{ translation.outputText }}</h3>
-            <h3>{{ translation.outputLanguage }}</h3>
-        {% endfor %}
-      <!-- Dummy data for testing display, (uncomment for debugging)-->
-<!--       <div class="record">
-        <h3>Record 1</h3>
-        <h3>Record 1</h3>
-        <h3>Record 1</h3>
-        <h3>Record 1</h3>
-      </div>
-      <div class="record">
-        <h3>Record 2</h3>
-        <h3>Record 2</h3>
-        <h3>Record 2</h3>
-        <h3>Record 2</h3>
-      </div>
-      <div class="record">
-        <h3>Record 3</h3>
-        <h3>Record 3</h3>
-        <h3>Record 3</h3>
-        <h3>Record 3</h3>
-      </div>
- -->
+      {% for translation in history %}
+          <h3>{{ translation.inputLanguage }}</h3>
+          <h3>{{ translation.inputText }}</h3>
+          <h3>{{ translation.outputText }}</h3>
+          <h3>{{ translation.outputLanguage }}</h3>
+      {% endfor %}
     </div>
   </body>
 </html>
