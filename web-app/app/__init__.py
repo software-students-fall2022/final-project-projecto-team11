@@ -5,6 +5,10 @@ import os
 def create_app(test_config=None):
     app = Flask(__name__)
 
+    # Set up authentication
+    app.secret_key = 'TODO: REPLACE FOR PRODUCTION'
+    app.config['SESSION_TYPE'] = 'filesystem'
+
     # Set up DB
     if test_config is None:
         db_conn_str = os.getenv('DB_URL', 'mongodb://localhost:27017')

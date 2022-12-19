@@ -32,3 +32,4 @@ Werkzeug==2.2.2
 git+https://github.com/openai/whisper.git
 zipp==3.11.0
 coverage==6.5.0
+bcrypt

@@ -1,5 +1,5 @@
 import translator.mlfunctions
-from translator.util import db, supported_languages
+from translator.util import supported_languages
 from bson.objectid import ObjectId
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 import time
@@ -8,7 +8,7 @@ import warnings
 import torch
 import traceback
 
-def work(tid, job_queue, delay):
+def work(tid, job_queue, delay, db, retryLimit):
     # Wait for a delay to allow for even spacing between threads.
     time.sleep(delay)
 
@@ -23,7 +23,9 @@ def work(tid, job_queue, delay):
     whisper_model = whisper.load_model(name='base', device=device)
     print(f"THREAD {tid}: Finished loading ML models.")
 
-    while True:
+    retries = 0
+
+    while retryLimit > retries or retryLimit == -1:
         # If no jobs in queue, wait one second, then check again.
         if job_queue.qsize() == 0:
             try:
@@ -31,7 +33,10 @@ def work(tid, job_queue, delay):
             except KeyboardInterrupt:
                 # If user tries to exit the program, gracefully exit.
                 break
+            retries += 1
             continue
+
+        retries = 0
         
         # Otherwise, pull a job from the queue and start processing it.
         job = job_queue.get()

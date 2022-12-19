@@ -123,8 +123,8 @@
     </head>
         <body>
             <div id="top">
-                <button class="button" id="history-button" href="{{ url_for('main.history') }}">Translation History</button>
-                <button class="button" id="logout-button" href="{{ url_for('auth.logout') }}">Logout</button>
+                <button class="button" id="history-button" onclick="location.href = '{{ url_for('main.history') }}';">Translation History</button>
+                <button class="button" id="logout-button" onclick="location.href = '{{ url_for('auth.logout') }}';">Logout</button>
                 <h1 class="title">Translate Anything</h1>
             </div>
             <div class="wrapper">
@@ -135,13 +135,13 @@
                         <button class="button" id="btn-record">Record</button>
                     </div>
                     <br><br>
-                    <label for="language-select">Choose language:</label>
-                    <select id="language-select">
-                    <option value="german">German</option>
-                    <option value="english" selected>English</option>
-                    <option value="french">French</option>
-                    <option value="spanish">Spanish</option>
-                    <option value="hindi">Hindi</option>
+                    <label for="output-language">Choose language:</label>
+                    <select id="output-language">
+                        <option value="de">German</option>
+                        <option value="en" selected>English</option>
+                        <option value="fr">French</option>
+                        <option value="es">Spanish</option>
+                        <option value="hi">Hindi</option>
                     </select>
                     <br><br>
                     <div id="translation-display"></div>

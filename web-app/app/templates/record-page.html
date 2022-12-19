@@ -86,8 +86,8 @@
   <body>
 
     <div id="top">
-        <button class="button" id="translate-button" href="{{ url_for('home.record') }}">Translate another audio</button>
-        <button class="button" id="logout-button" href="{{ url_for('auth.logout') }}">Logout</button>
+        <button class="button" id="translate-button" onclick="location.href = '{{ url_for('home.record') }}';">Translate another audio</button>
+        <button class="button" id="logout-button" onclick="location.href = '{{ url_for('auth.logout') }}';"">Logout</button>
         <h1 class="title">Translation History</h1>
       </div>
     
