@@ -192,8 +192,8 @@
         </script>
         <body>
             <div id="top">
-                <button class="button" id="history-button">Translation History</button>
-                <button class="button" id="logout-button">Logout</button>
+                <button class="button" id="history-button" href="{{ url_for('main.history') }}">Translation History</button>
+                <button class="button" id="logout-button" href="{{ url_for('auth.logout') }}">Logout</button>
                 <h1 class="title">Translate Anything</h1>
             </div>
             <div class="wrapper">

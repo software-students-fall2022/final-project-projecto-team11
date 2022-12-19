@@ -56,8 +56,8 @@
 </head>
 <body>
     <div id="top">
-        <button class="button" id="register-button">Register</button>
-        <button class="button" id="login-button">Login</button>
+        <button class="button" id="register-button" href="{{ url_for('auth.register') }}">Register</button>
+        <button class="button" id="login-button" href="{{ url_for('auth.login') }}">Login</button>
         <h1 class="title">Translate Anything</h1>
     </div>
     <p style="font-size: 18px; margin-bottom: 20px;">Final Project done for the class Software Engineering</p>

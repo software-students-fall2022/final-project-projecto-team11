@@ -86,8 +86,8 @@
   <body>
 
     <div id="top">
-        <button class="button" id="translate-button">Translate another audio</button>
-        <button class="button" id="logout-button">Logout</button>
+        <button class="button" id="translate-button" href="{{ url_for('home.record') }}">Translate another audio</button>
+        <button class="button" id="logout-button" href="{{ url_for('auth.logout') }}">Logout</button>
         <h1 class="title">Translation History</h1>
       </div>
     
@@ -159,13 +159,3 @@ def records():
 
   # return the records as a JSON response
   return jsonify(records) -->
-
-
-<script>
-  // Add an event listener to the records to make them clickable
-  document.querySelector('#records').addEventListener('click', event => {
-    if (event.target.closest('.record')) {
-      // Handle the click event for the record that was clicked
-    }
-  });
-</script>

@@ -6,9 +6,13 @@ from . import db
 
 main = Blueprint('main', __name__)
 
-# TODO: Require login to access this page
 @main.route('/')
-def home():
+def landing():
+    return render_template('homepage.html')
+
+# TODO: Require login to access this page
+@main.route('/record')
+def record():
     # TODO: Set up check for if user is logged in
     if False:
         return redirect(url_for('auth.login'))

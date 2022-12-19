@@ -55,7 +55,7 @@
     <div class="message">
         <h1>Login Failed</h1>
         <p>Sorry, but the email address and password you entered do not match our records. Please try again.</p>
-        <a href="/" class="btn">Try Again</a>
+        <a href="{{ url_for('auth.login') }}" class="btn">Try Again</a>
     </div>
 </body>
 </html>
