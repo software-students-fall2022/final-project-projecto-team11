@@ -1,9 +1,9 @@
 from translator.mlworker import work
 import multiprocessing
 
-job_queue = multiprocessing.Queue()
+default_job_queue=multiprocessing.Queue()
 
-def start_threads(num_threads, db, slowstart=False):
+def start_threads(num_threads, db, job_queue=default_job_queue, slowstart=False, retries=-1):
     # Check the database to see if any items were processing on last shutdown.
     translations_processing = db.find({'status.message': "PROCESSING"}, {'_id': 1})
     for translation in translations_processing:
@@ -21,6 +21,12 @@ def start_threads(num_threads, db, slowstart=False):
     # Compute a delay amount between threads starting to ensure even spacing.
     delay = 30 if slowstart else 1.0/float(num_threads)
 
+    processes = []
+
     # Create and start the number of threads requested.
     for i in range(num_threads):
-        multiprocessing.Process(target=work, args=(i, job_queue, i*delay, db, -1)).start()
+        process = multiprocessing.Process(target=work, args=(i, job_queue, i*delay, db, retries))
+        processes.append(process)
+        process.start()
+
+    return processes

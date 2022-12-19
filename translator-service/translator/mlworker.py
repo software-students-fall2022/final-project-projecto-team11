@@ -8,7 +8,7 @@ import warnings
 import torch
 import traceback
 
-def work(tid, job_queue, delay, db, retryLimit):
+def work(tid, job_queue, delay, db, retryLimit=-1):
     # Wait for a delay to allow for even spacing between threads.
     time.sleep(delay)
 

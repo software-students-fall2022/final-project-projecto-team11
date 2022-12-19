@@ -4,7 +4,7 @@ from translator.util import supported_languages
 import multiprocessing
 from bson.objectid import ObjectId
 import time
-from translator import mlfunctions, mlworker
+from translator import mlfunctions, mlworker, jobhandler, endpoints, create_app
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
 ckpt = 'facebook/m2m100_418M'
@@ -32,12 +32,12 @@ def test_translate_unsupported_language(model_tr, tokenizers):
         mlfunctions.translate("hello", "xyz", model_tr, tokenizers)
 
 @pytest.fixture
-def test_db():
-    # Set up a test database for the duration of the test
-    # You may need to modify this to create a new database or collection specifically for the test
-    db = mongomock.MongoClient('mongodb://localhost:27017')
-    yield db.translator.translations
-    # Clean up any changes made to the test database
+def mongo_client():
+    yield mongomock.MongoClient('mongodb://localhost:27017')
+
+@pytest.fixture
+def test_db(mongo_client):
+    yield mongo_client.translator.translations
 
 @pytest.fixture
 def model_tr():
@@ -81,6 +81,14 @@ def test_work(lang, expected_output, test_db, job_queue):
     result = test_db.find_one({'_id': ObjectId(job_id)})
     assert result['translation']['outputText'] == expected_output
 
+def test_app(mongo_client):
+    app = create_app({
+        "TESTING": True,
+        "MONGO_CLIENT": mongo_client,
+        "NUM_THREADS": 2
+    })
+    assert app != None
+
 # def test_add_job():
 #     #test when outputLanguage is in acceptable languages
 #     response = add_job(outputLanguage="en")
@@ -104,3 +112,24 @@ def test_work(lang, expected_output, test_db, job_queue):
 #     assert "IN_QUEUE" in response.body
 #     assert "None" in response.body
 
+@pytest.mark.parametrize("threads", [(1),(2),(3),(4)])
+def test_job_handler(threads, test_db, job_queue):
+    processes = jobhandler.start_threads(threads, test_db, job_queue)
+    assert len(processes) == threads
+    for process in processes:
+        process.kill()
+
+# def test_get_job(test_db):
+#     # Insert job into database.
+#     id = test_db.insert_one({
+#         "user": None,
+#         "translation": {
+#             "outputLanguage": "en"
+#         },
+#         "status": {
+#             "message": "IN_QUEUE",
+#             "update": time.time()
+#         },
+#         "body": inputs[lang]
+#     }).inserted_id
+#     assert endpoints.get_job(id, db=test_db) != None
