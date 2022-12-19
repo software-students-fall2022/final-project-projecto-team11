@@ -6,16 +6,16 @@ import sys
 def get_users_collection(client):
     try:
         db = client.get_database('translator')
-        return pymongo.collection.Collection(db, 'users')
+        return db['users']
     except Exception as e:
-        print(f"Error getting translation collection: {e}")
+        print(f"Error getting user collection: {e}")
         return None
 
 # Returns translations collection given client
 def get_translations_collection(client):
     try:
         db = client.get_database('translator')
-        return pymongo.collection.Collection(db, 'translations')
+        return db['translations']
     except Exception as e:
         print(f"Error getting translation collection: {e}")
         return None
@@ -28,7 +28,7 @@ def insert_sample_data(client, user_fn='sample_user_data.json', translation_fn='
         user_data = json.load(user_file)
         translation_data = json.load(translation_file)
         get_users_collection(client).insert_many(user_data)
-        get_users_collection(client).insert_many(translation_data)
+        get_translations_collection(client).insert_many(translation_data)
     except FileNotFoundError:
         print("Could not find sample data file")
     except Exception as e:

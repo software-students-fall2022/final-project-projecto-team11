@@ -26,7 +26,7 @@ def history():
     # TODO: Use _id or username field to check for translations
     userid = session[SESSION_VAR_NAME]
     # only give us the list of translations for this user
-    cursor = db.get_translations_collection(current_app.config['MONGO_CLIENT']).find({"user":userid}, {"translations" : 1})
+    cursor = db.get_translations_collection(current_app.config['MONGO_CLIENT']).find({"user":userid}, {"status.message" : "SUCCESS"})
     history_data = []
     # temporary fix - will have performance cost when larger amounts of data
     for doc in cursor:
