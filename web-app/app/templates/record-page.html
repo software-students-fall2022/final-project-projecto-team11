@@ -130,38 +130,5 @@
       </div>
  -->
     </div>
-<!--     Javascript code for displaying <script>
-        const fetchRecords = async () => {
-          const response = await fetch('/records');
-          const records = await response.json();
-  
-          // render the records using the template
-          const template = document.getElementById('record-template');
-          const recordsContainer = document.getElementById('records');
-          records.forEach(record => {
-            const recordElement = template.content.cloneNode(true);
-            recordElement.querySelector('h3').textContent = record.inputLanguage;
-            recordElement.querySelector('h3').textContent = record.inputText;
-            recordElement.querySelector('h3').textContent = record.outputText;
-            recordElement.querySelector('h3').textContent = record.outputLanguage;
-            recordsContainer.appendChild(recordElement);
-          });
-        }
-  
-        // retrieve the records when the page loads
-        window.addEventListener('load', fetchRecords);
-      </script> -->
   </body>
 </html>
-
-
-<!-- @app.route('/records')
-def records():
-  # connect to the database and retrieve the records
-  client = MongoClient(uri)
-  collection = client.db("test").collection("records")
-  records = collection.find({})
-  client.close()
-
-  # return the records as a JSON response
-  return jsonify(records) -->
