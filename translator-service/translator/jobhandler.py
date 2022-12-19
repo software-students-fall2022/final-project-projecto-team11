@@ -1,6 +1,5 @@
 from translator.mlworker import work
 import multiprocessing
-import time
 
 job_queue = multiprocessing.Queue()
 
@@ -24,4 +23,4 @@ def start_threads(num_threads, db, slowstart=False):
 
     # Create and start the number of threads requested.
     for i in range(num_threads):
-        multiprocessing.Process(target=work, args=(i, job_queue, i*delay)).start()
+        multiprocessing.Process(target=work, args=(i, job_queue, i*delay, db, -1)).start()
