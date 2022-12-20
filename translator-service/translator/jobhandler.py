@@ -21,6 +21,12 @@ def start_threads(num_threads, db, slowstart=False):
     # Compute a delay amount between threads starting to ensure even spacing.
     delay = 30 if slowstart else 1.0/float(num_threads)
 
+    processes = []
+
     # Create and start the number of threads requested.
     for i in range(num_threads):
-        multiprocessing.Process(target=work, args=(i, job_queue, i*delay, db, -1)).start()
+        process = multiprocessing.Process(target=work, args=(i, job_queue, i*delay, db, -1))
+        process.start()
+        processes.append(process)
+
+    return processes
