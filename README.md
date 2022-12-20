@@ -56,3 +56,6 @@ To logout from your account, click the "Logout" button on the top right corner.
 [Brandon Chao](https:/github.com/Sciao)
 
 [Khalifa AlFalasi](https:/github.com/Khalifa-AlFalasi)
+
+### NOTE ON TRANSLATOR SERVICE DEPLOYMENT
+Our translator-service container component uses multi-processing, which we have discovered to not be compatible with certain OSes. As a result, deployment to digital ocean was not possible in the scope of the project.
