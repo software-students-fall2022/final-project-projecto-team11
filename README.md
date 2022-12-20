@@ -28,6 +28,12 @@ If you receive permissions errors, use `sudo` in front of the above command if o
 
 Now, navigate to <http://localhost:5001>.
 
+## Hosts
+
+[DigitalOcean Deployment](https://web-app-oyfrn.ondigitalocean.app/)
+
+[Dockerhub Repo for Both Containers](https://hub.docker.com/repository/docker/chiaos/se_final_project_repo)
+
 ## Instructions for Use
 
 ### Sign in or sign up
