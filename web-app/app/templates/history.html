@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  History
+</h1>
+{{ history }}
+<article>
+  {% for translation in history %}
+  <ul>
+      <li>{{ translation.inputLanguage }}</li>
+      <li>{{ translation.inputText }}</li>
+      <li>{{ translation.outputText }}</li>
+      <li>{{ translation.outputLanguage }}</li>
+  </ul>
+  {% endfor %}
+</article>
+{% endblock %}

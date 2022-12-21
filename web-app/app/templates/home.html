@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="title">
+    Home Page
+  </h1>
+  <button class="button button-wide" id="btn-record">Record</button>
+  <input type="text" id="input-output-language" placeholder="Output language">
+      <div id="translation-display"></div>
+  <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+{% endblock %}

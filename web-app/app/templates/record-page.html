@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <title>Translator - History</title>
+    <style>
+    
+        @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+      /* Set the background color to black */
+      body {
+        font-family: 'Roboto', Arial, sans-serif;
+        background-color: black;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        color: #fff;
+      }
+
+      /* Add some styling for the records */
+      .record {
+        cursor: pointer;
+        padding: 10px;
+        margin: 10px;
+        width: calc(50% - 20px);
+        color: black;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(255, 255, 255);
+        display: flex;
+        justify-content: space-evenly;
+      }
+      .record:hover {
+        box-shadow: 0 0 25px rgba(255, 255, 255);
+      }
+
+      /* Use a responsive font size for the title */
+      h3 {
+        font-size: calc(0.5em + 1vw);
+      }
+
+      h4 {
+        font-size: 1rem;
+        margin-top: .1rem;
+        margin-bottom: .1rem;
+      }
+
+      /* Make the records take up the full width on small screens */
+      @media (max-width: 600px) {
+        .record {
+          width: 100%;
+          box-sizing: border-box;
+        }
+      }
+
+      /* Add some styling for the buttons and title */
+      .button {
+        cursor: pointer;
+        border: 2px solid white;
+        background-color: black;
+        color: white;
+        font-size: 1em;
+        padding: 10px;
+        margin: 10px;
+        box-shadow: 0 0 10px rgba(255, 255, 255);
+        position: absolute;
+      }
+      .button:hover {
+        box-shadow: 0 0 15px rgba(255, 255, 255);
+      }
+      .title {
+        color: white;
+        font-size: 3em;
+        margin: 100;
+        text-align: center;
+        padding: 20px 0;
+        margin-bottom: 3rem;
+        padding-bottom: 1rem;
+      }
+
+      #logout-button {
+        top: 10px;
+        right: 10px;
+      }
+
+      #translate-button {
+        top: 10px;
+        left: 10px;
+      }
+
+      #records {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .translation-card {
+        width: 50vw;
+        max-width: 50vw;
+        min-height: 85px;
+        padding: 10px;
+        background-color: #ffffff55;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(255,255,255,.5);
+        margin-bottom: 2rem;
+      }
+
+      .translation-card:hover {
+        background-color: #ffffff44;
+      }
+
+      .translation-card > p {
+        margin-top: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <div id="top">
+        <button class="button" id="translate-button" onclick="location.href = '{{ url_for('main.record') }}';">Translate another audio</button>
+        <button class="button" id="logout-button" onclick="location.href = '{{ url_for('auth.logout') }}';"">Logout</button>
+        <h1 class="title">Translation History</h1>
+        <h3>{{ message }}</h3>
+      </div>
+    
+    
+
+    <div id="records">
+      {% for translation in history %}
+          <div class="translation-card">
+            <p>{{ translation.inputLanguage }} &#x2192; {{ translation.outputLanguage }}</p>
+            <h4>{{ translation.inputText }}</h4>
+            <h4>{{ translation.outputText }}</h4>
+          </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>
