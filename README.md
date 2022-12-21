@@ -10,7 +10,7 @@
 ## Description
 Our app provides real-time translation of speech for users. Simply speak into the microphone and the app will transcribe your words into text, translate them, and display the translation through the web app. Additionally, users have the option to create an account to access their translation history.
 
-Please run the below commands in a terminal on your system to install and run these programs. Before you begin, please [ensure Docker is installed on your system](https://docs.docker.com/engine/install/). Also, please [ensure ffmpeg is installed on your system](https://ffmpeg.org/download.html).
+Please run the below commands in a terminal on your system to install and run these programs. Before you begin, please [ensure Docker is installed on your system](https://docs.docker.com/engine/install/).
 
 ## Instructions to Install and run
 
@@ -64,4 +64,4 @@ To logout from your account, click the "Logout" button on the top right corner.
 [Khalifa AlFalasi](https:/github.com/Khalifa-AlFalasi)
 
 ### NOTE ON TRANSLATOR SERVICE DEPLOYMENT
-As discussed with the professor, our translator-service container component uses multi-processing, which we have discovered to not be compatible with certain OSes. As a result, deployment to digital ocean was not possible in the scope of the project.
+Our translator-service container component uses multi-processing, which we have discovered to not be compatible with certain OSes. As a result, we were not able to deploy some components of our project to digital ocean. Our workflow for the translator service also fails on the testing stage due to this reason. As per our discussion in class on 12/19/2022, the professor has agreed that these issues lie beyond the scope of our project and we don't need to fix them!
